@@ -1,7 +1,6 @@
-import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as React from 'react';
 import { getMonacoOverflowContainer } from './getMonacoOverflowContainer';
-import { monacoLoader } from './monacoLoader';
 import { reactTypesLoader } from './reactTypesLoader';
 import { getMonacoSetup } from './setupMonaco';
 
@@ -14,29 +13,28 @@ function loadMonacoEditor() {
 
   window.MonacoEnvironment = monacoSetup.monacoEnvironment;
 
-  return (monacoPromise ||= Promise.all([monacoLoader(), reactTypesLoader()]).then(
-    ([monaco, reactTypes]) => {
-      monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-        jsx: monaco.languages.typescript.JsxEmit.Preserve,
-      });
-      monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-        noSemanticValidation: true,
-        noSyntaxValidation: false,
-      });
+  return (monacoPromise ||= Promise.all([reactTypesLoader()]).then(([reactTypes]) => {
+    const monaco = Monaco;
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      jsx: monaco.languages.typescript.JsxEmit.Preserve,
+    });
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: true,
+      noSyntaxValidation: false,
+    });
 
-      reactTypes.forEach(([packageName, dTsFile]) => {
-        const pName = packageName.replace('@types/', '');
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(
-          dTsFile,
-          `file:///node_modules/${pName}`,
-        );
-      });
+    reactTypes.forEach(([packageName, dTsFile]) => {
+      const pName = packageName.replace('@types/', '');
+      monaco.languages.typescript.typescriptDefaults.addExtraLib(
+        dTsFile,
+        `file:///node_modules/${pName}`,
+      );
+    });
 
-      monacoSetup.onMonacoLoad?.(monaco);
+    monacoSetup.onMonacoLoad?.(monaco);
 
-      return monaco;
-    },
-  ));
+    return monaco;
+  }));
 }
 
 let fileCount = 1;

@@ -1,4 +1,7 @@
+// @ts-expect-error
 import { addons, types } from '@storybook/manager-api';
+// @ts-expect-error
+
 import { AddonPanel } from '@storybook/components';
 import * as React from 'react';
 import { addonId, panelId, paramId } from './constants';
@@ -7,6 +10,7 @@ import Editor from './Editor/Editor';
 import type { StoryState } from './index';
 
 const store = createStore<StoryState>();
+// @ts-expect-error
 
 addons.register(addonId, (api) => {
   const getCodeEditorStoryId = (): string | undefined =>
@@ -17,6 +21,8 @@ addons.register(addonId, (api) => {
     title: 'Live code editor',
     type: types.PANEL,
     disabled: () => !getCodeEditorStoryId(),
+    // @ts-expect-error
+
     render({ active }) {
       const storyId = getCodeEditorStoryId();
 
