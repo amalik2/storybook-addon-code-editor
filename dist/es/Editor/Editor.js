@@ -1,14 +1,13 @@
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as React from 'react';
 import { getMonacoOverflowContainer } from './getMonacoOverflowContainer';
+import { monacoLoader } from './monacoLoader';
 import { reactTypesLoader } from './reactTypesLoader';
 import { getMonacoSetup } from './setupMonaco';
 let monacoPromise;
 function loadMonacoEditor() {
     const monacoSetup = getMonacoSetup();
     window.MonacoEnvironment = monacoSetup.monacoEnvironment;
-    return (monacoPromise ||= Promise.all([reactTypesLoader()]).then(([reactTypes]) => {
-        const monaco = Monaco;
+    return (monacoPromise ||= Promise.all([monacoLoader(), reactTypesLoader()]).then(([monaco, reactTypes]) => {
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             jsx: monaco.languages.typescript.JsxEmit.Preserve,
         });

@@ -34,17 +34,16 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Editor;
-const Monaco = __importStar(require("monaco-editor/esm/vs/editor/editor.api"));
 const React = __importStar(require("react"));
 const getMonacoOverflowContainer_1 = require("./getMonacoOverflowContainer");
+const monacoLoader_1 = require("./monacoLoader");
 const reactTypesLoader_1 = require("./reactTypesLoader");
 const setupMonaco_1 = require("./setupMonaco");
 let monacoPromise;
 function loadMonacoEditor() {
     const monacoSetup = (0, setupMonaco_1.getMonacoSetup)();
     window.MonacoEnvironment = monacoSetup.monacoEnvironment;
-    return (monacoPromise ||= Promise.all([(0, reactTypesLoader_1.reactTypesLoader)()]).then(([reactTypes]) => {
-        const monaco = Monaco;
+    return (monacoPromise ||= Promise.all([(0, monacoLoader_1.monacoLoader)(), (0, reactTypesLoader_1.reactTypesLoader)()]).then(([monaco, reactTypes]) => {
         monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
             jsx: monaco.languages.typescript.JsxEmit.Preserve,
         });

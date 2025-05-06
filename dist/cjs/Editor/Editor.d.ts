@@ -1,4 +1,4 @@
-import * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import * as React from 'react';
 export type EditorOptions = Monaco.editor.IEditorOptions;
 interface EditorProps {

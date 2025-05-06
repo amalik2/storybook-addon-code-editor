@@ -11,11 +11,11 @@ function injectScript(url: string) {
     const script = document.createElement('script');
     script.src = url;
     script.defer = true;
-    script.onload = () => {
+    script.onload = (e) => {
       // @ts-expect-error
 
       global.define = o;
-      resolve(undefined);
+      resolve(e);
     };
     script.onerror = reject;
     document.head.append(script);
@@ -25,6 +25,8 @@ function injectScript(url: string) {
 export function monacoLoader(): Promise<typeof Monaco> {
   const relativeLoaderScriptPath = 'monaco-editor/min/vs/loader.js';
   return injectScript(relativeLoaderScriptPath).then((e) => {
+    // @ts-expect-error
+
     const loaderScriptSrc: string = (e.target as any)?.src || window.location.origin + '/';
     const baseUrl = loaderScriptSrc.replace(relativeLoaderScriptPath, '');
     return new Promise((resolve) => {
