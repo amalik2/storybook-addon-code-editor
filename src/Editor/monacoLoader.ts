@@ -1,11 +1,22 @@
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 function injectScript(url: string) {
-  return new Promise<Event>((resolve, reject) => {
+  // @ts-expect-error
+
+  const o = global.define;
+  // @ts-expect-error
+
+  global.define = undefined;
+  return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = url;
     script.defer = true;
-    script.onload = resolve;
+    script.onload = () => {
+      // @ts-expect-error
+
+      global.define = o;
+      resolve(undefined);
+    };
     script.onerror = reject;
     document.head.append(script);
   });
